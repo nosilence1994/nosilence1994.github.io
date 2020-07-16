@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="为什么要使用Mock工具在做单元测试的时候，我们会发现我们要测试的方法会引用很多外部依赖的对象，比如：（发送邮件，网络通讯，远程服务, 文件系统等等）。 而我们没法控制这些外部依赖的对象，为了解决这个问题，我们就需要用到Mock工具来模拟这些外部依赖的对象，来完成单元测试。 为什么要使用PowerMock现如今比较流行的Mock工具如jMock 、EasyMock 、Mockito等都有一个共同的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PowerMock">
+<meta property="og:url" content="http://yoursite.com/2020/07/17/PowerMock/index.html">
+<meta property="og:site_name" content="路人丁的私人Blog">
+<meta property="og:description" content="为什么要使用Mock工具在做单元测试的时候，我们会发现我们要测试的方法会引用很多外部依赖的对象，比如：（发送邮件，网络通讯，远程服务, 文件系统等等）。 而我们没法控制这些外部依赖的对象，为了解决这个问题，我们就需要用到Mock工具来模拟这些外部依赖的对象，来完成单元测试。 为什么要使用PowerMock现如今比较流行的Mock工具如jMock 、EasyMock 、Mockito等都有一个共同的">
+<meta property="article:published_time" content="2020-07-16T16:57:41.000Z">
+<meta property="article:modified_time" content="2020-07-16T17:13:02.281Z">
+<meta property="article:author" content="沉默的路人丁">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/07/17/PowerMock/"/>
+
+
+
+
+
+  <title>PowerMock | 路人丁的私人Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">路人丁的私人Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/17/PowerMock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="沉默的路人丁">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="路人丁的私人Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PowerMock</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-17T00:57:41+08:00">
+                2020-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="为什么要使用Mock工具"><a href="#为什么要使用Mock工具" class="headerlink" title="为什么要使用Mock工具"></a>为什么要使用Mock工具</h1><p>在做单元测试的时候，我们会发现我们要测试的方法会引用很多外部依赖的对象，比如：（发送邮件，网络通讯，远程服务, 文件系统等等）。 而我们没法控制这些外部依赖的对象，为了解决这个问题，我们就需要用到Mock工具来模拟这些外部依赖的对象，来完成单元测试。</p>
+<h1 id="为什么要使用PowerMock"><a href="#为什么要使用PowerMock" class="headerlink" title="为什么要使用PowerMock"></a>为什么要使用PowerMock</h1><p>现如今比较流行的Mock工具如jMock 、EasyMock 、Mockito等都有一个共同的缺点：不能mock静态、final、私有方法等。而PowerMock能够完美的弥补以上三个Mock工具的不足。</p>
+<h1 id="PowerMock简介"><a href="#PowerMock简介" class="headerlink" title="PowerMock简介"></a>PowerMock简介</h1><p>PowerMock是一个扩展了其它如EasyMock等mock框架的、功能更加强大的框架。PowerMock使用一个自定义类加载器和字节码操作来模拟静态方法，构造函数，final类和方法，私有方法，去除静态初始化器等等。通过使用自定义的类加载器，简化采用的IDE或持续集成服务器不需要做任何改变。熟悉PowerMock支持的mock框架的开发人员会发现PowerMock很容易使用，因为对于静态方法和构造器来说，整个的期望API是一样的。PowerMock旨在用少量的方法和注解扩展现有的API来实现额外的功能。目前PowerMock支持EasyMock和Mockito。</p>
+<h1 id="PowerMock入门"><a href="#PowerMock入门" class="headerlink" title="PowerMock入门"></a>PowerMock入门</h1><p>PowerMock有两个重要的注解：</p>
+<ul>
+<li>@RunWith(PowerMockRunner.class)</li>
+<li>@PrepareForTest({YourClassWithEgStaticMethod.class})<br>如果你的测试用例里没有使用注解@PrepareForTest，那么可以不用加注解@RunWith(PowerMockRunner.class)，反之亦然。<br>当你需要使用PowerMock强大功能（Mock静态、final、私有方法等）的时候，就需要加注解@PrepareForTest。</li>
+</ul>
+<p>@InjectMocks：创建一个实例，用@Mock或@Spy注解创建的mock将被注入到该实例中。<br>　@Mock：创建一个mock，该对象所有的方法被置空，即都不是真实的方法。<br>　@Spy：创建一个mock对象，@Spy修饰的对象必须先手动new出来，但是，该对象所有方法都是真实方法，返回值都是和真实方法一样的。</p>
+<p>需要注意@Mock和@Spy对象在方法mock时的区别：<br>　　对@Spy生成的类，用when去设置模拟返回值时，它里面的方法会先执行一次，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PowerMockito.when(demo.say(ArgumentMatchers.anyString())).thenReturn(<span class="string">"zero"</span>);</span><br></pre></td></tr></table></figure>
+<p>这种方式时，demo.say()方法会先调用一次，需要用如下方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// --- error</span></span><br><span class="line"><span class="comment">// PowerMockito.doReturn("zero").when(demo).sys(ArgumentMatchers.anyString());</span></span><br><span class="line"><span class="comment">// PowerMockito.doReturn("zero").when(demo.sys(ArgumentMatchers.anyString()));</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// --- error</span></span><br><span class="line"><span class="comment">// Mockito.doReturn("zero").when(demo.sys(ArgumentMatchers.anyString()));</span></span><br><span class="line"><span class="comment">// correct</span></span><br><span class="line">Mockito.doReturn(<span class="string">"zero"</span>).when(demo).sys(ArgumentMatchers.anyString());</span><br></pre></td></tr></table></figure>
+
+<h1 id="PowerMock基本用法"><a href="#PowerMock基本用法" class="headerlink" title="PowerMock基本用法"></a>PowerMock基本用法</h1><h2 id="普通Mock：-Mock参数传递的对象"><a href="#普通Mock：-Mock参数传递的对象" class="headerlink" title="普通Mock： Mock参数传递的对象"></a>普通Mock： Mock参数传递的对象</h2><p>测试目标代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">callArgumentInstance</span><span class="params">(File file)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">return</span> file.exists();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCallArgumentInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    File file = PowerMockito.mock(File<span class="class">.<span class="keyword">class</span>)</span>; </span><br><span class="line">    ClassUnderTest underTest = <span class="keyword">new</span> ClassUnderTest();</span><br><span class="line">    PowerMockito.when(file.exists()).thenReturn(<span class="keyword">true</span>);</span><br><span class="line">    Assert.assertTrue(underTest.callArgumentInstance(file)); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Mock方法内部new出来的对象"><a href="#Mock方法内部new出来的对象" class="headerlink" title="Mock方法内部new出来的对象"></a>Mock方法内部new出来的对象</h2><p>测试目标代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">callInternalInstance</span><span class="params">(String path)</span> </span>&#123; </span><br><span class="line">        File file = <span class="keyword">new</span> File(path);</span><br><span class="line">        <span class="keyword">return</span> file.exists();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(PowerMockRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">TestClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span> </span><br><span class="line">    <span class="meta">@PrepareForTest</span>(ClassUnderTest<span class="class">.<span class="keyword">class</span>) </span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">void</span> <span class="title">testCallInternalInstance</span>() <span class="title">throws</span> <span class="title">Exception</span> </span>&#123;</span><br><span class="line">        File file = PowerMockito.mock(File<span class="class">.<span class="keyword">class</span>)</span>; </span><br><span class="line">        ClassUnderTest underTest = <span class="keyword">new</span> ClassUnderTest(); </span><br><span class="line">        PowerMockito.whenNew(File.class).withArguments("bbb").thenReturn(file); </span><br><span class="line">        PowerMockito.when(file.exists()).thenReturn(<span class="keyword">true</span>); </span><br><span class="line">        Assert.assertTrue(underTest.callInternalInstance(<span class="string">"bbb"</span>)); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明：当使用PowerMockito.whenNew方法时，必须加注解@PrepareForTest和@RunWith。注解@PrepareForTest里写的类是需要mock的new对象代码所在的类。</p>
+<h2 id="Mock普通对象的final方法"><a href="#Mock普通对象的final方法" class="headerlink" title="Mock普通对象的final方法"></a>Mock普通对象的final方法</h2><p>测试目标代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">callFinalMethod</span><span class="params">(ClassDependency refer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> refer.isAlive(); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassDependency</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isAlive</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do something </span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(PowerMockRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">TestClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span> </span><br><span class="line">    <span class="meta">@PrepareForTest</span>(ClassDependency<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">void</span> <span class="title">testCallFinalMethod</span>() </span>&#123;</span><br><span class="line">        ClassDependency depencency =  PowerMockito.mock(ClassDependency<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        ClassUnderTest underTest = <span class="keyword">new</span> ClassUnderTest();</span><br><span class="line">        PowerMockito.when(depencency.isAlive()).thenReturn(<span class="keyword">true</span>);</span><br><span class="line">        Assert.assertTrue(underTest.callFinalMethod(depencency));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明： 当需要mock final方法的时候，必须加注解@PrepareForTest和@RunWith。注解@PrepareForTest里写的类是final方法所在的类。 </p>
+<h2 id="Mock普通类的静态方法"><a href="#Mock普通类的静态方法" class="headerlink" title="Mock普通类的静态方法"></a>Mock普通类的静态方法</h2><p>测试目标代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">callStaticMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ClassDependency.isExist();</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassDependency</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isExist</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(PowerMockRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">TestClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span> </span><br><span class="line">    <span class="meta">@PrepareForTest</span>(ClassDependency<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">void</span> <span class="title">testCallStaticMethod</span>() </span>&#123;</span><br><span class="line">        ClassUnderTest underTest = <span class="keyword">new</span> ClassUnderTest();</span><br><span class="line">        PowerMockito.mockStatic(ClassDependency<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        PowerMockito.when(ClassDependency.isExist()).thenReturn(<span class="keyword">true</span>);</span><br><span class="line">        Assert.assertTrue(underTest.callStaticMethod());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明：当需要mock静态方法的时候，必须加注解@PrepareForTest和@RunWith。注解@PrepareForTest里写的类是静态方法所在的类。</p>
+<h2 id="Mock-私有方法"><a href="#Mock-私有方法" class="headerlink" title="Mock 私有方法"></a>Mock 私有方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">callPrivateMethod</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> isExist(); </span><br><span class="line">    &#125;       </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isExist</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(PowerMockRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">TestClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Test</span> </span><br><span class="line">    <span class="meta">@PrepareForTest</span>(ClassUnderTest<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">void</span> <span class="title">testCallPrivateMethod</span>() <span class="title">throws</span> <span class="title">Exception</span> </span>&#123;</span><br><span class="line">       ClassUnderTest underTest = PowerMockito.mock(ClassUnderTest<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">       PowerMockito.when(underTest.callPrivateMethod()).thenCallRealMethod();</span><br><span class="line">       PowerMockito.when(underTest, <span class="string">"isExist"</span>).thenReturn(<span class="keyword">true</span>);</span><br><span class="line">       Assert.assertTrue(underTest.callPrivateMethod());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明：和Mock普通方法一样，只是需要加注解@PrepareForTest(ClassUnderTest.class)，注解里写的类是私有方法所在的类。 </p>
+<h2 id="Mock系统类的静态和final方法"><a href="#Mock系统类的静态和final方法" class="headerlink" title="Mock系统类的静态和final方法"></a>Mock系统类的静态和final方法</h2><p>测试目标代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassUnderTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">callSystemFinalMethod</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> str.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">callSystemStaticMethod</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> System.getProperty(str); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(PowerMockRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">TestClassUnderTest</span> </span>&#123;</span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="meta">@PrepareForTest</span>(ClassUnderTest<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">  <span class="title">public</span> <span class="title">void</span> <span class="title">testCallSystemStaticMethod</span>() </span>&#123; </span><br><span class="line">      ClassUnderTest underTest = <span class="keyword">new</span> ClassUnderTest();</span><br><span class="line">      PowerMockito.mockStatic(System<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      PowerMockito.when(System.getProperty(<span class="string">"aaa"</span>)).thenReturn(<span class="string">"bbb"</span>);</span><br><span class="line">      Assert.assertEquals(<span class="string">"bbb"</span>, underTest.callJDKStaticMethod(<span class="string">"aaa"</span>)); </span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说明：和Mock普通对象的静态方法、final方法一样，只不过注解@PrepareForTest里写的类不一样 ，注解里写的类是需要调用系统方法所在的类。</p>
+<h1 id="无所不能的PowerMock"><a href="#无所不能的PowerMock" class="headerlink" title="无所不能的PowerMock"></a>无所不能的PowerMock</h1><ol>
+<li>验证静态方法<br>PowerMockito.verifyStatic();<br>Static.firstStaticMethod(param);</li>
+<li>扩展验证<br>PowerMockito.verifyStatic(Mockito.times(2)); //  被调用2次<br>Static.thirdStaticMethod(Mockito.anyInt()); // 以任何整数值被调用</li>
+<li>更多的Mock方法<br><a href="http://code.google.com/p/powermock/wiki/MockitoUsage13" target="_blank" rel="noopener">http://code.google.com/p/powermock/wiki/MockitoUsage13</a></li>
+</ol>
+<h1 id="PowerMock简单实现原理"><a href="#PowerMock简单实现原理" class="headerlink" title="PowerMock简单实现原理"></a>PowerMock简单实现原理</h1><ul>
+<li>当某个测试方法被注解@PrepareForTest标注以后，在运行测试用例时，会创建一个新的org.powermock.core.classloader.MockClassLoader实例，然后加载该测试用例使用到的类（系统类除外）。</li>
+<li>PowerMock会根据你的mock要求，去修改写在注解@PrepareForTest里的class文件（当前测试类会自动加入注解中），以满足特殊的mock需求。例如：去除final方法的final标识，在静态方法的最前面加入自己的虚拟实现等。</li>
+<li>如果需要mock的是系统类的final方法和静态方法，PowerMock不会直接修改系统类的class文件，而是修改调用系统类的class文件，以满足mock需求。</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://blog.csdn.net/jackiehff/article/details/14000779" target="_blank" rel="noopener">PowerMock介绍</a></p>
+<p><a href="https://blog.csdn.net/zero__007/article/details/80203479" target="_blank" rel="noopener">PowerMock从入门到放弃再到使用</a></p>
+<h1 id="临时"><a href="#临时" class="headerlink" title="临时"></a>临时</h1><p><a href="https://how2j.cn/k/spring/spring-annotation-ioc-di/1067.html#nowhere" target="_blank" rel="noopener">https://how2j.cn/k/spring/spring-annotation-ioc-di/1067.html#nowhere</a></p>
+<p><a href="https://blog.csdn.net/u013041642/article/details/71430293" target="_blank" rel="noopener">Spring对Controller、Service、Dao进行Junit单元测试总结</a></p>
+<p><a href="https://www.jianshu.com/p/f72665224e05" target="_blank" rel="noopener">PowerMock使用问题小计（任性整理）</a></p>
+<p><a href="https://blog.csdn.net/zhuqiuhui/article/details/88602595" target="_blank" rel="noopener">PowerMock结合SpringJUnit4ClassRunner解决UT中静态依赖问题</a></p>
+<p><a href="https://blog.csdn.net/yys79/article/details/80332332" target="_blank" rel="noopener">PowerMockRunner无法重用spring的TestContext，慎重使用</a></p>
+<p><a href="https://my.oschina.net/u/2518341/blog/2996149" target="_blank" rel="noopener">https://my.oschina.net/u/2518341/blog/2996149</a></p>
+<p><a href="https://www.iteye.com/blog/jinnianshilongnian-1883013" target="_blank" rel="noopener">加速Java应用开发速度1——加速spring/hibernate应用调试时启动速度</a></p>
+<p><a href="https://blog.csdn.net/shan9liang/article/details/40452469" target="_blank" rel="noopener">聊聊单元测试（三）——Spring Test+JUnit完美组合</a></p>
+<p><a href="https://blog.csdn.net/ZyManTou/article/details/53005208" target="_blank" rel="noopener">PowerMock+Mockito+MockMvc实现Controller,Service,Mapper全覆盖测试</a></p>
+<p>@PowerMockRunnerDelegate</p>
+<p>@ContextConfiguration</p>
+<p>@RunWith(PowerMockRunner.class)<br>@PowerMockIgnore({ “javax.management.*”, “javax.net.ssl.*”})</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xmlns:p</span>=<span class="string">"http://www.springframework.org/schema/p"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans  </span></span></span><br><span class="line"><span class="tag"><span class="string">    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  </span></span></span><br><span class="line"><span class="tag"><span class="string">    http://www.springframework.org/schema/context  </span></span></span><br><span class="line"><span class="tag"><span class="string">    http://www.springframework.org/schema/context/spring-context-3.1.xsd&gt;</span></span></span><br><span class="line"><span class="tag"><span class="string"></span></span></span><br><span class="line"><span class="tag"><span class="string">    &lt;!-- 自动扫描该包 --&gt;</span></span></span><br><span class="line"><span class="tag"><span class="string">    &lt;context:component-scan base-package="</span><span class="attr">com</span>" /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">locations</span> </span>= &#123;<span class="string">"classpath*:/*.xml"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDPlayerTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@ContextConfiguration括号里的locations = {“classpath<em>:/</em>.xml”}就表示将class路径里的所有.xml文件都包括进来，那么刚刚创建的那么XML文件就会包括进来，那么里面自动扫描的bean就都可以拿到了，此时就可以在测试类中使用@Autowired注解来获取之前自动扫描包下的所有bean</p>
+<p>classpath和classpath*区别:</p>
+<p>classpath：只会到你的class路径中查找找文件。</p>
+<p>classpath*：不仅包含class路径，还包括jar文件中（class路径）进行查找。</p>
+<p>如果放在src/test/resources目录中，使用@ContextConfiguration(locations={“classpath*:applicationContext.xml”})进行搜索</p>
+<p>@ContextConfiguration(locations = “/test-context.xml”, loader = CustomContextLoader.class)</p>
+<p><a href="https://www.bookstack.cn/read/spring-5-framework-doc/11-11-4.md#@ContextConfiguration" target="_blank" rel="noopener">https://www.bookstack.cn/read/spring-5-framework-doc/11-11-4.md#@ContextConfiguration</a></p>
+<p>@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)<br>每个测试方法之后重新加载上下文</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/07/17/%E5%A2%99%E4%BD%93%E8%AF%86%E5%88%AB%E5%B0%8F%E8%AE%B0/" rel="prev" title="墙体识别小记">
+                墙体识别小记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">沉默的路人丁</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要使用Mock工具"><span class="nav-number">1.</span> <span class="nav-text">为什么要使用Mock工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要使用PowerMock"><span class="nav-number">2.</span> <span class="nav-text">为什么要使用PowerMock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PowerMock简介"><span class="nav-number">3.</span> <span class="nav-text">PowerMock简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PowerMock入门"><span class="nav-number">4.</span> <span class="nav-text">PowerMock入门</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PowerMock基本用法"><span class="nav-number">5.</span> <span class="nav-text">PowerMock基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#普通Mock：-Mock参数传递的对象"><span class="nav-number">5.1.</span> <span class="nav-text">普通Mock： Mock参数传递的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock方法内部new出来的对象"><span class="nav-number">5.2.</span> <span class="nav-text">Mock方法内部new出来的对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock普通对象的final方法"><span class="nav-number">5.3.</span> <span class="nav-text">Mock普通对象的final方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock普通类的静态方法"><span class="nav-number">5.4.</span> <span class="nav-text">Mock普通类的静态方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock-私有方法"><span class="nav-number">5.5.</span> <span class="nav-text">Mock 私有方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock系统类的静态和final方法"><span class="nav-number">5.6.</span> <span class="nav-text">Mock系统类的静态和final方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无所不能的PowerMock"><span class="nav-number">6.</span> <span class="nav-text">无所不能的PowerMock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PowerMock简单实现原理"><span class="nav-number">7.</span> <span class="nav-text">PowerMock简单实现原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#临时"><span class="nav-number">9.</span> <span class="nav-text">临时</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">沉默的路人丁</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
