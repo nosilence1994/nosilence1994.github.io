@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Git," />
 
 
 
@@ -79,11 +79,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="路人丁的私人Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="Git日常使用模式去自己的工作分支work 1git checkout work 工作…提交工作分支的修改 1git commit -a &quot;balabala&quot; 回到主分支 1git checkout master 获取远程最新的修改，此时不会产生冲突 1git pull 回到工作分支 1git checkout work 用rebase合并主干的修改，如果有冲突在此时解决 1git rebase">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git使用小结">
+<meta property="og:url" content="http://yoursite.com/2020/07/22/Git%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/index.html">
 <meta property="og:site_name" content="路人丁的私人Blog">
+<meta property="og:description" content="Git日常使用模式去自己的工作分支work 1git checkout work 工作…提交工作分支的修改 1git commit -a &quot;balabala&quot; 回到主分支 1git checkout master 获取远程最新的修改，此时不会产生冲突 1git pull 回到工作分支 1git checkout work 用rebase合并主干的修改，如果有冲突在此时解决 1git rebase">
+<meta property="article:published_time" content="2020-07-22T14:53:35.000Z">
+<meta property="article:modified_time" content="2020-07-22T15:37:45.158Z">
 <meta property="article:author" content="沉默的路人丁">
+<meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary">
 
 
@@ -114,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/07/22/Git使用小结/"/>
 
 
 
 
 
-  <title>路人丁的私人Blog</title>
+  <title>Git使用小结 | 路人丁的私人Blog</title>
   
 
 
@@ -139,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -213,9 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -245,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/22/Git%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/" itemprop="url">Git使用小结</a></h1>
+          <h1 class="post-title" itemprop="name headline">Git使用小结</h1>
         
 
         <div class="post-meta">
@@ -297,27 +299,35 @@
       
 
       
-        
-          
-          Git日常使用模式去自己的工作分支work
-1git checkout work
-工作…提交工作分支的修改
-1git commit -a "balabala"
-回到主分支
-1git checkout master
-获取远程最新的修改，此时不会产生冲突
-1git pull
-回到工作分支
-1git ch
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/07/22/Git%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <h1 id="Git日常使用模式"><a href="#Git日常使用模式" class="headerlink" title="Git日常使用模式"></a>Git日常使用模式</h1><p>去自己的工作分支work</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout work</span><br></pre></td></tr></table></figure>
+<p>工作<br>…<br>提交工作分支的修改</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -a "balabala"</span><br></pre></td></tr></table></figure>
+<p>回到主分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br></pre></td></tr></table></figure>
+<p>获取远程最新的修改，此时不会产生冲突</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull</span><br></pre></td></tr></table></figure>
+<p>回到工作分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout work</span><br></pre></td></tr></table></figure>
+<p>用rebase合并主干的修改，如果有冲突在此时解决</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rebase master</span><br></pre></td></tr></table></figure>
+<p>回到主分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout master</span><br></pre></td></tr></table></figure>
+<p>合并工作分支的修改，此时不会产生冲突</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge work</span><br></pre></td></tr></table></figure>
+<p>提交到远程主干</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push</span><br></pre></td></tr></table></figure>
+<p>这样做的好处是，远程主干上的历史永远是线性的。<br>每个人在本地分支解决冲突，不会在主干上产生冲突。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://blog.csdn.net/syc434432458/article/details/51861483" target="_blank" rel="noopener">Git 问题，一个 master，多个新功能分支，怎样有序地合并和提交</a></p>
+<h1 id="优秀参考资料"><a href="#优秀参考资料" class="headerlink" title="优秀参考资料"></a>优秀参考资料</h1><p><a href="https://juejin.im/post/5d2d24245188250501477cc4" target="_blank" rel="noopener">git rebase VS git merge？ 更优雅的 git 合并方式值得拥有</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/72946397" target="_blank" rel="noopener">Git分支管理实践</a></p>
+<p><a href="https://blog.wj2015.com/2019/07/23/git%E5%B7%A5%E4%BD%9C%E6%B5%81%EF%BC%8C%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%90%88%E5%B9%B6%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BB%A3%E7%A0%81%E5%88%B0%E6%9F%90%E4%B8%AA%E5%88%86%E6%94%AF/" target="_blank" rel="noopener">GIT工作流，如何正确的合并自己的代码到某个分支上</a></p>
+<p><a href="https://juejin.im/post/5f183865e51d4534b73a9923" target="_blank" rel="noopener">Git存储原理和敏捷开发</a></p>
+<p><a href="https://juejin.im/post/5f140598e51d453480768de7" target="_blank" rel="noopener">[译] 相见恨晚的 Git 命令</a></p>
+<p><a href="https://blog.csdn.net/su1573/article/details/91988523" target="_blank" rel="noopener">Git详解及版本控制规范</a></p>
+<h1 id="Intellij-IDEA操作图解"><a href="#Intellij-IDEA操作图解" class="headerlink" title="Intellij IDEA操作图解"></a>Intellij IDEA操作图解</h1><p><a href="https://blog.csdn.net/collonn/article/details/52959436" target="_blank" rel="noopener">图解用intellij idea merge git conflict cherry pick 合并git冲突</a></p>
+<p><a href="https://blog.csdn.net/su1573/article/details/91990437" target="_blank" rel="noopener">idea+git合并分支解决冲突及详解步骤</a></p>
+
       
     </div>
     
@@ -332,268 +342,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/17/Java%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%B0%8F%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="沉默的路人丁">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="路人丁的私人Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/17/Java%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%B0%8F%E8%AE%B0/" itemprop="url">Java科学计算小记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-17T01:12:47+08:00">
-                2020-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/Git/" rel="tag"># Git</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          
-          参考apache commons线性目标函数算法http://cn.voidcc.com/question/p-ncuqrjoz-uz.html评价：机翻，给予commons.math的线性优化，有具体问题和代码，参考性很强
-How to perform Integer Linear Program
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/07/17/Java%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%B0%8F%E8%AE%B0/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/17/Java%E7%A7%91%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%B0%8F%E8%AE%B0/" rel="next" title="Java科学计算小记">
+                <i class="fa fa-chevron-left"></i> Java科学计算小记
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/17/%E5%A2%99%E4%BD%93%E8%AF%86%E5%88%AB%E5%B0%8F%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="沉默的路人丁">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="路人丁的私人Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/17/%E5%A2%99%E4%BD%93%E8%AF%86%E5%88%AB%E5%B0%8F%E8%AE%B0/" itemprop="url">墙体识别小记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-17T01:12:37+08:00">
-                2020-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          参考论文：利用Faster R-CNN自动识别建筑平面图功能构件的方法
-OpenCvSharp 学习笔记20– 霍夫变换 - 直线检测 (Hough Line transform)https://blog.csdn.net/weixin_41049188/article/details/921204
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/07/17/%E5%A2%99%E4%BD%93%E8%AF%86%E5%88%AB%E5%B0%8F%E8%AE%B0/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -603,137 +381,11 @@ OpenCvSharp 学习笔记20– 霍夫变换 - 直线检测 (Hough Line transform)
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/17/PowerMock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="沉默的路人丁">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="路人丁的私人Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/17/PowerMock/" itemprop="url">PowerMock</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-17T00:57:41+08:00">
-                2020-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          为什么要使用Mock工具在做单元测试的时候，我们会发现我们要测试的方法会引用很多外部依赖的对象，比如：（发送邮件，网络通讯，远程服务, 文件系统等等）。 而我们没法控制这些外部依赖的对象，为了解决这个问题，我们就需要用到Mock工具来模拟这些外部依赖的对象，来完成单元测试。
-为什么要使用PowerM
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/07/17/PowerMock/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -741,6 +393,10 @@ OpenCvSharp 学习笔记20– 霍夫变换 - 直线检测 (Hough Line transform)
 
 
           
+
+  
+
+
 
         </div>
         
@@ -761,8 +417,17 @@ OpenCvSharp 学习笔记20– 霍夫变换 - 直线检测 (Hough Line transform)
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -813,6 +478,22 @@ OpenCvSharp 学习笔记20– 霍夫变换 - 直线检测 (Hough Line transform)
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Git日常使用模式"><span class="nav-number">1.</span> <span class="nav-text">Git日常使用模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优秀参考资料"><span class="nav-number">3.</span> <span class="nav-text">优秀参考资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Intellij-IDEA操作图解"><span class="nav-number">4.</span> <span class="nav-text">Intellij IDEA操作图解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -946,6 +627,10 @@ OpenCvSharp 学习笔记20– 霍夫变换 - 直线检测 (Hough Line transform)
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
